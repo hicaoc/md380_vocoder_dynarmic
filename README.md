@@ -1,11 +1,11 @@
-# md380emu
+# md380_vocoder_dynarmic
 
 MD380 vocoder library that works on x86_64 and arm64 natively. This uses dynarmic to run the MD380 firmware.  Boost libs are required for whichever platform this is built for.  See the header file for usage. 
 
 
 ## Building
 ```
-cd md380vocoder_dynarmic
+cd md380_vocoder_dynarmic
 mkdir build
 cd build
 cmake ..
