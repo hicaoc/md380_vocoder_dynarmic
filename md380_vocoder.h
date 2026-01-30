@@ -1,6 +1,6 @@
-/* 
+/*
 * 	Copyright (C) 2020-2021 by Doug McLain AD8DP
-* 
+*
 * 	Based on code from https://github.com/travisgoodspeed/md380tools
 *
 *   This program is free software; you can redistribute it and/or modify
@@ -18,11 +18,37 @@
 *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef MD380_VOCODER_H
+#define MD380_VOCODER_H
+
 #include <inttypes.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int md380_init();
-void md380_decode(uint8_t *ambe, int16_t *pcm); // reads 49 bits (packed into 7 uint8_t elements in MSB order) of AMBE+2 from ambe49, writes 160 int16_t elements to pcm, 
+void md380_decode(uint8_t *ambe, int16_t *pcm); // reads 49 bits (packed into 7 uint8_t elements in MSB order) of AMBE+2 from ambe49, writes 160 int16_t elements to pcm,
 void md380_encode(uint8_t *ambe, int16_t *pcm); // reads 160 int16_t elements from pcm, writes 49 bits (packed into 7 uint8_t elements in MSB order) of AMBE+2 to ambe49.
 void md380_decode_fec(uint8_t *ambe, int16_t *pcm);
 void md380_encode_fec(uint8_t *ambe, int16_t *pcm);
+
+#ifdef __cplusplus
+}
+#endif
+
+// C++ class interface
+#ifdef __cplusplus
+class MD380Vocoder {
+public:
+    MD380Vocoder();
+    ~MD380Vocoder();
+
+    void init();
+    void encode(const int16_t* pcm_in, uint8_t* ambe_out);
+    void decode(const uint8_t* ambe_in, int16_t* pcm_out);
+};
+#endif
+
+#endif // MD380_VOCODER_H
                       

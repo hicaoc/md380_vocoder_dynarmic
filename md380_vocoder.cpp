@@ -1,3 +1,5 @@
+// +build ignore
+
 #include <array>
 #include <chrono>
 #include <cstdint>
@@ -8,6 +10,7 @@
 #include <iostream>
 
 #include "tables.h"
+#include "md380_vocoder.h"
 
 #include "dynarmic/interface/A32/a32.h"
 #include "dynarmic/interface/A32/config.h"
@@ -219,8 +222,17 @@ MD380Emulator *emulator;
 
 int md380_init()
 {
-	emulator = new MD380Emulator(firmware, sram);
-	return 0;
+    if (firmware == nullptr) {
+        fprintf(stderr, "md380_init: firmware == NULL\n");
+        return -1;
+    }
+    if (sram == nullptr) {
+        fprintf(stderr, "md380_init: sram == NULL\n");
+        return -1;
+    }
+    fprintf(stderr, "md380_init: firmware=%p sram=%p\n", (void*)firmware, (void*)sram);
+    emulator = new MD380Emulator(firmware, sram);
+    return 0;
 }
 
 void md380_decode(uint8_t *ambe, int16_t *pcm)
@@ -340,5 +352,30 @@ void md380_encode_fec(uint8_t *ambe, int16_t *pcm)
 		unsigned int cPos = C_TABLE[i];
 		WRITE_BIT(ambe, cPos, cOrig & MASK);
 	}
+}
+
+// MD380Vocoder C++ class implementation
+MD380Vocoder::MD380Vocoder() {
+}
+
+MD380Vocoder::~MD380Vocoder() {
+}
+
+void MD380Vocoder::init() {
+    md380_init();
+}
+
+void MD380Vocoder::encode(const int16_t* pcm_in, uint8_t* ambe_out) {
+    // pcm_in: 160 samples
+    // ambe_out: 9 bytes (AMBE with FEC)
+    // md380_encode_fec takes PCM input and produces AMBE+FEC output
+    md380_encode_fec(ambe_out, (int16_t*)pcm_in);
+}
+
+void MD380Vocoder::decode(const uint8_t* ambe_in, int16_t* pcm_out) {
+    // ambe_in: 9 bytes (AMBE with FEC)
+    // pcm_out: 160 samples
+    // md380_decode_fec takes AMBE+FEC input and produces PCM output
+    md380_decode_fec((uint8_t*)ambe_in, pcm_out);
 }
 

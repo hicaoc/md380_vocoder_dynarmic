@@ -1,0 +1,43 @@
+# OS
+.DS_Store
+.Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Go Build Artifacts
+*.exe
+*.test
+*.out
+debug
+__debug_bin
+md380_vocoder_dynarmic
+
+# C/C++ Build Artifacts
+build*/
+cmake-build-*/
+_obj/
+_cgo_*
+*.cgo1.go
+*.cgo2.c
+
+# Object Files and Libraries
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.a
+
+# EXCEPTION: Retain the localized static library required for CGo build
+!go_wrapper/lib/libmd380_vocoder.a
+
+# Generated Firmware Source Files
+firmware/firmware.c
+firmware/sram.c
+
+# FetchContent directories (if redundant)
+dynarmic_fetch/
